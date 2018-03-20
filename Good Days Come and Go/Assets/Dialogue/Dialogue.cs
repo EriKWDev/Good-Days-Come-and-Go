@@ -14,6 +14,11 @@ public class Dialogue {
 		PLAYSOUND
 	}
 
+    public enum DialogueLineType {
+        TEXT,
+        TRIGGER
+    }
+
 	public Dictionary<string, List<DialogueLine>> dialogue;
 	public TextAsset dialogueCSV;
 
@@ -22,17 +27,13 @@ public class Dialogue {
 		UpdateDialogue (out dialogue);
 	}
 
-	public void UpdateDialogue (out Dictionary<string, List<DialogueLine>> newDialogue) {
-		newDialogue = null;
-	}
+    public void UpdateDialogue(out Dictionary<string, List<DialogueLine>> newDialogue) {
+        newDialogue = null;
+    }
 }
 
 public class DialogueLine {
-	public enum DialogueLineType {
-		TEXT,
-		TRIGGER
-	}
-	public DialogueLineType dialogueLineType;
+	public Dialogue.DialogueLineType dialogueLineType;
 	public DialogueSpeaker dialogueSpeaker;
 
 	public string text;
@@ -49,7 +50,7 @@ public class DialogueLine {
 		dialogueSpeaker = dialogueSpeaker_;
 		text = text_;
 		lettersPerSecond = lettersPerSecond_;
-		dialogueLineType = DialogueLineType.TEXT;
+        dialogueLineType = Dialogue.DialogueLineType.TEXT;
 	}
 	
 	// Trigger TextLine Struct
@@ -60,10 +61,16 @@ public class DialogueLine {
 		variable2 = variable2_;
 		variable3 = variable3_;
 		variable4 = variable4_;
-		dialogueLineType = DialogueLineType.TRIGGER;
+        dialogueLineType = Dialogue.DialogueLineType.TRIGGER;
 	}
 }
 
 public class DialogueSpeaker {
+    public string name;
+    public Color color;
 
+    public DialogueSpeaker (string name_, Color color_) {
+        name = name_;
+        color = color_;
+    }
 }

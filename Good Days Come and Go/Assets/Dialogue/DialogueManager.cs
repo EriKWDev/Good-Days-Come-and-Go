@@ -7,15 +7,23 @@ public class DialogueManager : MonoBehaviour {
     [Header ("Dialogue Settings")]
     public TextAsset dialogueCSV;
     Dialogue dialogue;
+	public bool debugDialogue = false;
+	public string debugDialogueID;
 
     [Header("Dialogue Speaker Settings")]
     public float defaultTextSpeed = 4f;
-
+	
 	void Awake () {
         dialogue = new Dialogue (dialogueCSV);   
 	}
 
-    public void ReadDialogue (string dialogueId) {
+	void Start () {
+		if (debugDialogue) {
+			ReadDialogue (debugDialogueID);
+		}
+	}
+
+	public void ReadDialogue (string dialogueId) {
         foreach (DialogueLine dialogueLine in dialogue.dialogue[dialogueId]) {
             DialogueLine (dialogueLine);
         }
@@ -38,10 +46,14 @@ public class DialogueManager : MonoBehaviour {
     }
 
     public void DialogueTrigger (DialogueLine dialogueLine) {
-        switch (dialogueLine.triggerType) {
-            default:
-                break;
-        }
+        foreach (Dialogue.TriggerType triggerType in dialogueLine.triggerTypes) {
+			switch (triggerType) {
+				default:
+				case Dialogue.TriggerType.NULL:
+
+					break;
+			}
+		}
     }
 
 	void Update () {

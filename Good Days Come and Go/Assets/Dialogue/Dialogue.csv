@@ -1,23 +1,23 @@
-"Identifier","Value","Variable 1","Variable 2","Variable 3","Variable 4"
-"ID","D000-000",,,,
-"Alice","My mother used to sing this song before I went to sleep...",,,,
-,"She never told me the name of the song though.",,,,
-"END",,,,,
-"ID","D000-001",,,,
-"Alice","TRIGGER",,,,
-,"WALK","12","5","4","15"
-,"ACTIVATE",,,,
-"Stephen","TRIGGER",,,,
-,"WALK","11","5","4","20"
-"Alice","TRIGGER",,,,
-,"WALK",,,"2",
-,"What…?",,,,
-"Stephen","Why did you run away, Alice?",,,,
-"Alice","I just thought that….",,,,
-,"What if I turned on the machine…",,,,
-,"Then maybe my parents would return…",,,,
-,"TRIGGER",,,,
-,"WAIT","4",,,
-,"…",,,,
-"Stephen","So utterly stubborn aren’t we?",,,,
-"END",,,,,
+Identifier;Value;Variable 1;Variable 2;Variable 3;Variable 4
+ID;D000-000;;;;
+Alice;My mother used to sing this song before I went to sleep...;;;;
+;She never told me the name of the song though.;;;;
+END;;;;;
+ID;D000-001;;;;
+Alice;TRIGGER;;;;
+;WALK;12;5;4;15
+Alice;ACTIVATE;;;;
+Stephen;TRIGGER;;;;
+;WALK;11;5;4;20
+Alice;TRIGGER;;;;
+;WALK;;;2;
+;Whatâ€¦?;;;;
+Stephen;Why did you run away, Alice?;;;;
+Alice;I just thought thatâ€¦.;;;;
+;What if I turned on the machineâ€¦;;;;
+;Then maybe my parents would returnâ€¦;;;;
+;TRIGGER;;;;
+;WAIT;4;;;
+;â€¦;;;;
+Stephen;So utterly stubborn arenâ€™t we?;;;;
+END;;;;;

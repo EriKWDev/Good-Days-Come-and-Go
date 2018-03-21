@@ -14,7 +14,8 @@ public class DialogueManager : MonoBehaviour {
     public float defaultTextSpeed = 4f;
 	
 	void Awake () {
-        dialogue = new Dialogue (dialogueCSV);   
+		// Debug.Log (dialogueCSV.text);
+		dialogue = new Dialogue (dialogueCSV);
 	}
 
 	void Start () {
@@ -24,7 +25,7 @@ public class DialogueManager : MonoBehaviour {
 	}
 
 	public void ReadDialogue (string dialogueId) {
-        foreach (DialogueLine dialogueLine in dialogue.dialogue[dialogueId]) {
+        foreach (DialogueLine dialogueLine in dialogue.dialogue[dialogueId.ToUpper ()]) {
             DialogueLine (dialogueLine);
         }
     }
@@ -36,13 +37,15 @@ public class DialogueManager : MonoBehaviour {
                 break;
             default:
             case Dialogue.DialogueLineType.TEXT:
-                DialogueLine (dialogueLine);
+                DialogueText (dialogueLine);
                 break;
         }
     }
 
     public void DialogueText (DialogueLine dialogueLine) {
-        
+		foreach (string text in dialogueLine.texts) {
+			print (dialogueLine.dialogueSpeaker.name + ": " + text);
+		}
     }
 
     public void DialogueTrigger (DialogueLine dialogueLine) {

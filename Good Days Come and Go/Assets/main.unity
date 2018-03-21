@@ -140,9 +140,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1bfa5fd7de4d241cbaaf1d9670af34d4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  dialogueCSV: {fileID: 4900000, guid: 21d81d31ab56c6a43bd823cae6fecaf3, type: 3}
-  debugDialogue: 0
-  debugDialogueID: D000-000
+  dialogueCSV: {fileID: 4900000, guid: c2b90a74e2317de4fab64d8deb104e96, type: 3}
+  debugDialogue: 1
+  debugDialogueID: D000-001
   defaultTextSpeed: 4
 --- !u!4 &100255719
 Transform:

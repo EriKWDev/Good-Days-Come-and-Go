@@ -155,7 +155,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 1
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1399686212
 GameObject:
@@ -168,6 +168,7 @@ GameObject:
   - component: {fileID: 1399686215}
   - component: {fileID: 1399686214}
   - component: {fileID: 1399686213}
+  - component: {fileID: 1399686217}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -198,7 +199,7 @@ Camera:
   m_Enabled: 1
   serializedVersion: 2
   m_ClearFlags: 1
-  m_BackGroundColor: {r: 0.14150941, g: 0.14150941, b: 0.14150941, a: 1}
+  m_BackGroundColor: {r: 0.36353806, g: 0.60294116, b: 0.44443983, a: 1}
   m_NormalizedViewPortRect:
     serializedVersion: 2
     x: 0
@@ -236,5 +237,19 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 0
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1399686217
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1399686212}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: be469df209d6b504cb0099dafc5fe1c8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  defaultTransitionMaterial: {fileID: 2100000, guid: 5b1fb7ae9fa80894eb13864c1248eb81,
+    type: 2}
+  hasEnded: 1

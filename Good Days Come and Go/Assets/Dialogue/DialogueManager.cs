@@ -14,48 +14,62 @@ public class DialogueManager : MonoBehaviour {
     public float defaultTextSpeed = 4f;
 	
 	void Awake () {
-		// Debug.Log (dialogueCSV.text);
 		dialogue = new Dialogue (dialogueCSV);
 	}
 
 	void Start () {
 		if (debugDialogue) {
-			ReadDialogue (debugDialogueID);
+			StartCoroutine (ReadDialogue (debugDialogueID));
 		}
 	}
 
-	public void ReadDialogue (string dialogueId) {
+	public IEnumerator ReadDialogue (string dialogueId) {
+		int index = 0;
         foreach (DialogueLine dialogueLine in dialogue.dialogue[dialogueId.ToUpper ()]) {
-            DialogueLine (dialogueLine);
+			yield return DialogueLine (dialogueLine, index);
+			index++;
         }
     }
 
-    public void DialogueLine (DialogueLine dialogueLine) {
+    public IEnumerator DialogueLine (DialogueLine dialogueLine, int index) {
         switch (dialogueLine.dialogueLineType) {
             case Dialogue.DialogueLineType.TRIGGER:
-                DialogueTrigger (dialogueLine);
-                break;
+				yield return StartCoroutine (DialogueTrigger (dialogueLine, index));
+				break;
             default:
             case Dialogue.DialogueLineType.TEXT:
-                DialogueText (dialogueLine);
+				yield return StartCoroutine (DialogueText (dialogueLine));
                 break;
         }
     }
 
-    public void DialogueText (DialogueLine dialogueLine) {
+    public IEnumerator DialogueText (DialogueLine dialogueLine) {
 		foreach (string text in dialogueLine.texts) {
 			print (dialogueLine.dialogueSpeaker.name + ": " + text);
+			yield return new WaitForSeconds (1.5f);
 		}
     }
 
-    public void DialogueTrigger (DialogueLine dialogueLine) {
+    public IEnumerator DialogueTrigger (DialogueLine dialogueLine, int index) {
         foreach (Dialogue.TriggerType triggerType in dialogueLine.triggerTypes) {
+			print (dialogueLine.dialogueSpeaker.name + " - TRIGGER: " + triggerType.ToString ());
+			foreach (string variable in dialogueLine.variables[index])
+				print (variable);
 			switch (triggerType) {
+				case Dialogue.TriggerType.WAIT:
+					//yield return new WaitForSeconds (float.Parse(dialogueLine.variables[index][0]));
+					break;
+				case Dialogue.TriggerType.ACTIVATE:
+					
+					break;
+				case Dialogue.TriggerType.GOTO:
+					ReadDialogue (dialogueLine.variables[index][0]);
+					break;
 				default:
-				case Dialogue.TriggerType.NULL:
 
 					break;
 			}
+			yield return new WaitForSeconds (0.5f);
 		}
     }
 

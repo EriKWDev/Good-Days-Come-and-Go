@@ -6,7 +6,6 @@ using UnityEngine;
 
 public class Dialogue {
 	public enum TriggerType {
-		NULL,
 		WALK,
 		ACTIVATE,
 		GOTO,
@@ -19,7 +18,6 @@ public class Dialogue {
 	}
 
     public enum DialogueLineType {
-		NULL,
         TEXT,
         TRIGGER
     }
@@ -39,12 +37,14 @@ public class Dialogue {
 
 	static string SPLIT_RE = @";(?=(?:[^""]*""[^""]*"")*(?![^""]*""))";
 	static string LINE_SPLIT_RE = @"\r\n|\n\r|\n|\r";
-	// static char[] TRIM_CHARS = { '\"' };
 
 	public void UpdateDialogue(out Dictionary<string, List<DialogueLine>> newDialogue) {
 		newDialogue = new Dictionary<string, List<DialogueLine>> ();
-
 		var lines = Regex.Split (dialogueCSV.text, LINE_SPLIT_RE);
+
+		if (lines[lines.Length - 1] == "")
+			Array.Resize (ref lines, lines.Length - 1);
+
 		if (lines.Length <= 1) {
 			Debug.LogError ("DialogueCSV did not contain any data.");
 			return;
@@ -55,13 +55,12 @@ public class Dialogue {
 		DialogueSpeaker currentDialogueSpeaker = NameToDialogueSpeaker("DEFAULT");
 		for (int i = 0; i < lines.Length; i++) {
 			var values = Regex.Split (lines[i], SPLIT_RE);
+			
 			if (values[0].ToUpper () == "ID") {
 				currentDialogueId = values[1].ToUpper ();
-				Debug.Log ("ID: " + currentDialogueId);
 			} else if (values[0].ToUpper () == "END") {
 				newDialogue[currentDialogueId] = tmpNewDialogueLines;
 				tmpNewDialogueLines = new List<DialogueLine> ();
-				Debug.Log ("ENDOF: " + currentDialogueId);
 				currentDialogueId = "";
 			} else {
 				if (values[0] != "") {
@@ -76,24 +75,26 @@ public class Dialogue {
 						int triggerIndex = 0;
 						while (!triggerIsDone) {
 							values = Regex.Split (lines[i], SPLIT_RE);
-							TriggerType tmpNewTriggerType = (TriggerType)Enum.Parse (typeof (TriggerType), values[1].ToUpper ());
-
-							switch (tmpNewTriggerType) {
-								case TriggerType.NULL:
-									triggerIsDone = true;
-									Debug.LogError ("Triggertype is undefined");
-									break;
-								default:
-									tmpNewDialogueLine.triggerTypes.Add (tmpNewTriggerType);
-									tmpNewDialogueLine.variables.Add (new List<string> ());
-									tmpNewDialogueLine.variables[triggerIndex].Add (values[2]);
-									tmpNewDialogueLine.variables[triggerIndex].Add (values[3]);
-									tmpNewDialogueLine.variables[triggerIndex].Add (values[4]);
-									tmpNewDialogueLine.variables[triggerIndex].Add (values[5]);
-									break;
+							if (!Enum.IsDefined (typeof (TriggerType), values[1].ToUpper ())) {
+								triggerIsDone = true;
+								tmpNewDialogueLines.Add (tmpNewDialogueLine);
+								triggerIndex++;
+								i--;
+								break;
+							} else {
+								TriggerType tmpNewTriggerType = (TriggerType)Enum.Parse (typeof (TriggerType), values[1].ToUpper ());
+								
+								tmpNewDialogueLine.triggerTypes.Add (tmpNewTriggerType);
+								tmpNewDialogueLine.variables.Add (new List<string> ());
+								for (int k = 0; k <4; k++) {
+									if (values[k + 2] != "")
+										tmpNewDialogueLine.variables[triggerIndex].Add (values[k + 2]);
+								}
 							}
 
-							if (i >= lines.Length || Regex.Split (lines[i + 1], SPLIT_RE)[1].ToUpper () != "TRIGGER" || Regex.Split (lines[i + 1], SPLIT_RE)[0].ToUpper () != "END" || Regex.Split (lines[i + 1], SPLIT_RE)[0].ToUpper () != tmpNewDialogueLine.dialogueSpeaker.name.ToUpper ()) {
+							var tmpNewValues = Regex.Split (lines[i + 1], SPLIT_RE);
+
+							if (i >= lines.Length || tmpNewValues[1].ToUpper () == "TRIGGER" || tmpNewValues[0].ToUpper () == "END" || (tmpNewValues[0].ToUpper () != "" && tmpNewValues[0].ToUpper () != currentDialogueSpeaker.name.ToUpper ())) {
 								triggerIsDone = true;
 								tmpNewDialogueLines.Add (tmpNewDialogueLine);
 							} else {
@@ -110,9 +111,9 @@ public class Dialogue {
 							values = Regex.Split (lines[i], SPLIT_RE);
 							tmpNewDialogueLine.texts.Add (values[1]);
 
-							// tmpNewDialogueLine.lettersPerSeconds[textIndex] = (values[2] == "" ? 0f : float.Parse (values[2]));
+							var tmpNewValues = Regex.Split (lines[i + 1], SPLIT_RE);
 
-							if (i >= lines.Length || Regex.Split (lines[i], SPLIT_RE)[0].ToUpper () != "END" || Regex.Split (lines[i+1], SPLIT_RE)[0].ToUpper () != tmpNewDialogueLine.dialogueSpeaker.name.ToUpper ()) {
+							if (i >= lines.Length || tmpNewValues[1].ToUpper () == "TRIGGER"  || tmpNewValues[0].ToUpper () == "END" || (tmpNewValues[0].ToUpper () != "" && tmpNewValues[0].ToUpper () != currentDialogueSpeaker.name.ToUpper ())) {
 								textIsDone = true;
 								tmpNewDialogueLines.Add (tmpNewDialogueLine);
 							} else {

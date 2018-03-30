@@ -7,6 +7,7 @@ using UnityEngine;
 public class Dialogue {
 	public enum TriggerType {
 		WALK,
+		FACE,
 		ACTIVATE,
 		GOTO,
 		WAIT,
@@ -83,13 +84,16 @@ public class Dialogue {
 								break;
 							} else {
 								TriggerType tmpNewTriggerType = (TriggerType)Enum.Parse (typeof (TriggerType), values[1].ToUpper ());
-								
-								tmpNewDialogueLine.triggerTypes.Add (tmpNewTriggerType);
-								tmpNewDialogueLine.variables.Add (new List<string> ());
+
+								Trigger tmpNewTrigger = new Trigger {
+									triggerType = tmpNewTriggerType
+								};
+
 								for (int k = 0; k <4; k++) {
-									if (values[k + 2] != "")
-										tmpNewDialogueLine.variables[triggerIndex].Add (values[k + 2]);
+									tmpNewTrigger.variables.Add (values[k + 2] == "" ? "NULL" : values[k + 2]);
 								}
+
+								tmpNewDialogueLine.triggers.Add (tmpNewTrigger);
 							}
 
 							var tmpNewValues = Regex.Split (lines[i + 1], SPLIT_RE);
@@ -128,6 +132,21 @@ public class Dialogue {
     }
 }
 
+public class Trigger {
+	public Dialogue.TriggerType triggerType;
+	public List<string> variables = new List<string> ();
+
+	public Trigger () {
+		triggerType = new Dialogue.TriggerType ();
+		variables = new List<string> ();
+	}
+
+	public Trigger (Dialogue.TriggerType _triggerType, List<string> _variables) {
+		triggerType = _triggerType;
+		variables = _variables;
+	}
+}
+
 public class DialogueLine {
 	public Dialogue.DialogueLineType dialogueLineType;
 	public DialogueSpeaker dialogueSpeaker;
@@ -135,8 +154,7 @@ public class DialogueLine {
 	public List<string> texts;
 	public List<float> lettersPerSeconds;
 
-	public List<Dialogue.TriggerType> triggerTypes;
-	public List<List<string>> variables;
+	public List<Trigger> triggers;
 
 	// Pre-DialogueLine Struct
 	public DialogueLine (DialogueSpeaker dialogueSpeaker_) {
@@ -144,8 +162,7 @@ public class DialogueLine {
 		dialogueLineType = new Dialogue.DialogueLineType ();
 		texts = new List<string> ();
 		lettersPerSeconds = new List<float> ();
-		triggerTypes = new List<Dialogue.TriggerType>();
-		variables = new List<List<string>> ();
+		triggers = new List<Trigger> ();
 	}
 
 	// Normal TextLine Struct
@@ -157,10 +174,9 @@ public class DialogueLine {
 	}
 	
 	// Trigger TextLine Struct
-	public DialogueLine (DialogueSpeaker dialogueSpeaker_, List<Dialogue.TriggerType> triggerTypes_, List<List<string>> variables_) {
+	public DialogueLine (DialogueSpeaker dialogueSpeaker_, List<Trigger> triggers_, List<List<string>> variables_) {
 		dialogueSpeaker = dialogueSpeaker_;
-		triggerTypes = triggerTypes_;
-		variables = variables_;
+		triggers = triggers_;
 		dialogueLineType = Dialogue.DialogueLineType.TRIGGER;
 	}
 }

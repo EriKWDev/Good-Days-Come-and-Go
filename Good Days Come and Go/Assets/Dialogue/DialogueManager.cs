@@ -24,17 +24,15 @@ public class DialogueManager : MonoBehaviour {
 	}
 
 	public IEnumerator ReadDialogue (string dialogueId) {
-		int index = 0;
         foreach (DialogueLine dialogueLine in dialogue.dialogue[dialogueId.ToUpper ()]) {
-			yield return DialogueLine (dialogueLine, index);
-			index++;
+			yield return DialogueLine (dialogueLine);
         }
     }
 
-    public IEnumerator DialogueLine (DialogueLine dialogueLine, int index) {
+    public IEnumerator DialogueLine (DialogueLine dialogueLine) {
         switch (dialogueLine.dialogueLineType) {
             case Dialogue.DialogueLineType.TRIGGER:
-				yield return StartCoroutine (DialogueTrigger (dialogueLine, index));
+				yield return StartCoroutine (DialogueTrigger (dialogueLine));
 				break;
             default:
             case Dialogue.DialogueLineType.TEXT:
@@ -46,24 +44,32 @@ public class DialogueManager : MonoBehaviour {
     public IEnumerator DialogueText (DialogueLine dialogueLine) {
 		foreach (string text in dialogueLine.texts) {
 			print (dialogueLine.dialogueSpeaker.name + ": " + text);
-			yield return new WaitForSeconds (1.5f);
+			yield return new WaitForSeconds (1f);
+			while (!Input.GetKeyUp (KeyCode.Space)) {
+				yield return null;
+			}
 		}
     }
 
-    public IEnumerator DialogueTrigger (DialogueLine dialogueLine, int index) {
-        foreach (Dialogue.TriggerType triggerType in dialogueLine.triggerTypes) {
-			print (dialogueLine.dialogueSpeaker.name + " - TRIGGER: " + triggerType.ToString ());
-			foreach (string variable in dialogueLine.variables[index])
-				print (variable);
-			switch (triggerType) {
+    public IEnumerator DialogueTrigger (DialogueLine dialogueLine) {
+        foreach (Trigger trigger in dialogueLine.triggers) {
+			print (dialogueLine.dialogueSpeaker.name + " - TRIGGER: " + trigger.triggerType.ToString ());
+
+			switch (trigger.triggerType) {
 				case Dialogue.TriggerType.WAIT:
-					//yield return new WaitForSeconds (float.Parse(dialogueLine.variables[index][0]));
+					yield return new WaitForSeconds (float.Parse(trigger.variables[0]));
 					break;
 				case Dialogue.TriggerType.ACTIVATE:
 					
 					break;
+				case Dialogue.TriggerType.WALK:
+					print ("*" + dialogueLine.dialogueSpeaker.name + " walks to x: " + trigger.variables[0] + " y: " + trigger.variables[1] + " facing: " + trigger.variables[2] + " at speed: " + trigger.variables[3] + "*");
+					break;
+				case Dialogue.TriggerType.FACE:
+					print ("*" + dialogueLine.dialogueSpeaker.name + " turns to: " + trigger.variables[2] + "*");
+					break;
 				case Dialogue.TriggerType.GOTO:
-					ReadDialogue (dialogueLine.variables[index][0]);
+					ReadDialogue (trigger.variables[0]);
 					break;
 				default:
 

@@ -184,9 +184,24 @@ public class DialogueLine {
 public class DialogueSpeaker {
     public string name;
     public Color color;
+	public GameObject gameObjectReference;
+
+	public int x;
+	public int y;
+	public int direction;
 
     public DialogueSpeaker (string name_, Color color_) {
         name = name_;
         color = color_;
+		x = 0;
+		y = 0;
+		direction = 2;
     }
+
+	public IEnumerator Walk (int newX, int newY, int newDirection, float speed) {
+		x = newX;
+		y = newY;
+		direction = newDirection;
+		yield return new WaitForSeconds (2f/speed);
+	}
 }

@@ -40,7 +40,7 @@ public class DialogueManager : MonoBehaviour {
                 break;
         }
     }
-
+	
     public IEnumerator DialogueText (DialogueLine dialogueLine) {
 		foreach (string text in dialogueLine.texts) {
 			print (dialogueLine.dialogueSpeaker.name + ": " + text);
@@ -63,7 +63,7 @@ public class DialogueManager : MonoBehaviour {
 					
 					break;
 				case Dialogue.TriggerType.WALK:
-					print ("*" + dialogueLine.dialogueSpeaker.name + " walks to x: " + trigger.variables[0] + " y: " + trigger.variables[1] + " facing: " + trigger.variables[2] + " at speed: " + trigger.variables[3] + "*");
+					yield return dialogueLine.dialogueSpeaker.Walk (int.Parse (trigger.variables[0]), int.Parse (trigger.variables[1]), int.Parse (trigger.variables[2]), float.Parse (trigger.variables[3]));
 					break;
 				case Dialogue.TriggerType.FACE:
 					print ("*" + dialogueLine.dialogueSpeaker.name + " turns to: " + trigger.variables[2] + "*");
